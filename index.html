@@ -1,0 +1,273 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Quer namorar comigo?</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=DM+Sans:wght@400;500;700&display=swap">
+<style>
+/* Layout: pergunta grande no topo à esquerda, coração no meio, botões na zona do polegar. O Não pode correr pela tela toda. */
+:root {
+  --bg: #FFF1F3;
+  --ink: #3B0F1F;
+  --muted: #8A4A5E;
+  --accent: #E5254F;
+  --accent-ink: #FFFFFF;
+  --soft: #FFD6DE;
+  --font-display: "Bricolage Grotesque", "Arial Black", system-ui, sans-serif;
+  --font-body: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1D0911; --ink: #FFE6EC; --muted: #D296A7; --accent: #FF4D74; --accent-ink: #2A0510; --soft: #3C1424;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1D0911; --ink: #FFE6EC; --muted: #D296A7; --accent: #FF4D74; --accent-ink: #2A0510; --soft: #3C1424;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 20px 24px;
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+.stage { height: 100%; display: flex; flex-direction: column; justify-content: space-between; gap: 16px; max-width: 520px; margin: 0 auto; }
+.eyebrow { margin: 0 0 12px; font-size: .8rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+h1 {
+  margin: 0; font-family: var(--font-display); font-weight: 800;
+  font-size: clamp(2.8rem, 15vw, 4.6rem); line-height: .96; letter-spacing: -.03em; text-wrap: balance;
+}
+h1 em { font-style: normal; color: var(--accent); }
+.hint { margin: 16px 0 0; min-height: 3em; max-width: 30ch; font-size: 1.05rem; line-height: 1.45; color: var(--muted); }
+.heart-wrap { flex: 1; display: grid; place-items: center; min-height: 0; }
+.heart { width: min(52vw, 220px); height: auto; color: var(--accent); animation: beat 1.4s ease-in-out infinite; transform-origin: 50% 60%; }
+@keyframes beat { 0%, 100% { transform: scale(1); } 12% { transform: scale(1.08); } 24% { transform: scale(1); } 36% { transform: scale(1.05); } }
+.actions { display: flex; align-items: center; justify-content: center; gap: 16px; padding-bottom: env(safe-area-inset-bottom, 0px); }
+button { font: inherit; cursor: pointer; border: 0; touch-action: manipulation; }
+button:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+.yes {
+  background: var(--accent); color: var(--accent-ink);
+  font-family: var(--font-display); font-weight: 800; font-size: 1.6rem; letter-spacing: -.01em;
+  min-width: 150px; min-height: 64px; padding: 0 32px; border-radius: 999px;
+  transition: transform .25s cubic-bezier(.3, 1.4, .5, 1);
+  transform: scale(var(--grow, 1));
+  z-index: 2;
+}
+.yes:active { transform: scale(calc(var(--grow, 1) * .96)); }
+.no-slot { display: inline-block; }
+.no {
+  background: var(--soft); color: var(--ink); font-weight: 700; font-size: 1.1rem;
+  min-width: 96px; min-height: 52px; padding: 0 24px; border-radius: 999px;
+}
+.no.float { position: fixed; z-index: 5; transition: left .22s cubic-bezier(.2, .9, .3, 1.2), top .22s cubic-bezier(.2, .9, .3, 1.2); }
+.probe { position: fixed; left: 0; width: 0; visibility: hidden; pointer-events: none; }
+.win {
+  position: fixed; inset: 0; z-index: 20; background: var(--accent); color: var(--accent-ink);
+  display: flex; flex-direction: column; justify-content: flex-end; gap: 12px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-top: calc(env(safe-area-inset-top, 0px) + 20px);
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 32px);
+}
+.win canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.win-text { position: relative; max-width: 520px; width: 100%; margin: 0 auto; }
+.win h2 { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: clamp(3.2rem, 18vw, 5.6rem); line-height: .92; letter-spacing: -.03em; }
+.win p { margin: 16px 0 24px; font-size: 1.2rem; line-height: 1.4; max-width: 24ch; }
+.again { background: var(--accent-ink); color: var(--accent); font-weight: 700; font-size: 1rem; min-height: 48px; padding: 0 24px; border-radius: 999px; }
+@media (prefers-reduced-motion: reduce) {
+  .heart { animation: none; }
+  .no.float, .yes { transition: none; }
+}
+</style>
+
+<main class="stage" id="stage">
+  <header>
+    <p class="eyebrow">Uma pergunta só</p>
+    <h1 id="q">Quer <em>namorar</em> comigo?</h1>
+    <p class="hint" id="hint" aria-live="polite">Pensa com carinho antes de responder.</p>
+  </header>
+
+  <div class="heart-wrap" aria-hidden="true">
+    <svg class="heart" viewBox="0 0 24 22" fill="currentColor"><path d="M12 21.2 3.2 12.6C.6 10 .5 5.9 3 3.4c2.3-2.3 6-2 8.1.5l.9 1 .9-1c2.1-2.5 5.8-2.8 8.1-.5 2.5 2.5 2.4 6.6-.2 9.2z"/></svg>
+  </div>
+
+  <div class="actions">
+    <button class="yes" id="yes" type="button">Sim</button>
+    <span class="no-slot" id="slot"><button class="no" id="no" type="button">Não</button></span>
+  </div>
+</main>
+
+<section class="win" id="win" hidden aria-live="polite">
+  <canvas id="confetti"></canvas>
+  <div class="win-text">
+    <h2>Eu sabia!</h2>
+    <p>Agora é oficial. Já pode avisar todo mundo.</p>
+    <button class="again" id="again" type="button">Ver de novo</button>
+  </div>
+</section>
+
+<div class="probe" id="probeTop" style="top:0;height:env(safe-area-inset-top,0px)"></div>
+<div class="probe" id="probeBottom" style="bottom:0;height:env(safe-area-inset-bottom,0px)"></div>
+
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var no = $('no'), yes = $('yes'), slot = $('slot'), hint = $('hint'), q = $('q');
+  var win = $('win'), stage = $('stage');
+  var tries = 0, floating = false, last = { x: 0, y: 0 };
+
+  var hints = [
+    'Pensa com carinho antes de responder.',
+    'Ué, o botão fugiu.',
+    'Ele ficou com vergonha.',
+    'Tenta de novo, ele não corre tão rápido.',
+    'Tá difícil, né?',
+    'O Sim está ficando maior, reparou?',
+    'Esse botão tem treino de maratona.',
+    'Quase! Quer dizer, nem perto.',
+    'Já são ' + 8 + ' tentativas.',
+    'Sem pressa. O Sim espera você.',
+    'Pode desistir, só o Sim funciona.'
+  ];
+
+  function rect(el) { return el.getBoundingClientRect(); }
+  function overlap(a, b, pad) {
+    return !(a.right + pad < b.left || a.left - pad > b.right || a.bottom + pad < b.top || a.top - pad > b.bottom);
+  }
+
+  function bounds() {
+    var m = 16;
+    var top = rect($('probeTop')).height + m;
+    var bottom = rect($('probeBottom')).height + m;
+    return { minX: m, maxX: window.innerWidth - no.offsetWidth - m, minY: top, maxY: window.innerHeight - no.offsetHeight - bottom };
+  }
+
+  function float() {
+    if (floating) return;
+    var r = rect(no);
+    slot.style.width = r.width + 'px';
+    slot.style.height = r.height + 'px';
+    no.classList.add('float');
+    no.style.left = r.left + 'px';
+    no.style.top = r.top + 'px';
+    floating = true;
+    void no.offsetWidth;
+  }
+
+  function dodge(px, py) {
+    if (win.hidden === false) return;
+    float();
+    var b = bounds();
+    var w = no.offsetWidth, h = no.offsetHeight;
+    var yr = rect(yes), qr = rect(q);
+    var cur = rect(no);
+    var best = null, bestScore = -1;
+    for (var i = 0; i < 50; i++) {
+      var x = b.minX + Math.random() * Math.max(0, b.maxX - b.minX);
+      var y = b.minY + Math.random() * Math.max(0, b.maxY - b.minY);
+      var c = { left: x, top: y, right: x + w, bottom: y + h };
+      if (overlap(c, yr, 14) || overlap(c, qr, 10)) continue;
+      var cx = x + w / 2, cy = y + h / 2;
+      var dp = (px == null) ? 999 : Math.hypot(cx - px, cy - py);
+      var dc = Math.hypot(x - cur.left, y - cur.top);
+      var score = Math.min(dp, 260) + Math.min(dc, 260);
+      if (dp > 150 && dc > 110) { best = { x: x, y: y }; break; }
+      if (score > bestScore) { bestScore = score; best = { x: x, y: y }; }
+    }
+    if (!best) best = { x: b.minX, y: b.minY };
+    no.style.left = best.x + 'px';
+    no.style.top = best.y + 'px';
+    tries++;
+    var idx = Math.min(tries, hints.length - 1);
+    hint.textContent = tries === 9 ? 'Já são 9 tentativas.' : hints[idx];
+    yes.style.setProperty('--grow', Math.min(1 + tries * 0.07, 1.55).toFixed(2));
+  }
+
+  document.addEventListener('pointermove', function (e) {
+    last.x = e.clientX; last.y = e.clientY;
+    if (e.pointerType !== 'mouse' || !floating && tries === 0 && false) return;
+    var r = rect(no);
+    var cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+    var reach = Math.max(r.width, r.height) / 2 + 70;
+    if (Math.hypot(e.clientX - cx, e.clientY - cy) < reach && win.hidden) dodge(e.clientX, e.clientY);
+  });
+
+  no.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') dodge(e.clientX, e.clientY); });
+  no.addEventListener('pointerdown', function (e) { e.preventDefault(); dodge(e.clientX, e.clientY); });
+  no.addEventListener('touchstart', function (e) {
+    e.preventDefault();
+    var t = e.touches[0];
+    dodge(t ? t.clientX : null, t ? t.clientY : null);
+  }, { passive: false });
+  no.addEventListener('click', function (e) { e.preventDefault(); dodge(last.x || null, last.y || null); });
+  no.addEventListener('focus', function () { dodge(null, null); });
+
+  window.addEventListener('resize', function () {
+    if (!floating) return;
+    var b = bounds();
+    var x = Math.min(Math.max(parseFloat(no.style.left) || 0, b.minX), b.maxX);
+    var y = Math.min(Math.max(parseFloat(no.style.top) || 0, b.minY), b.maxY);
+    no.style.left = x + 'px';
+    no.style.top = y + 'px';
+  });
+
+  /* Confete de corações */
+  var cv = $('confetti'), ctx = cv.getContext('2d'), parts = [], raf = 0;
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function drawHeart(c, x, y, s, rot, color) {
+    c.save(); c.translate(x, y); c.rotate(rot); c.scale(s / 24, s / 24); c.translate(-12, -11);
+    c.fillStyle = color;
+    c.fill(new Path2D('M12 21.2 3.2 12.6C.6 10 .5 5.9 3 3.4c2.3-2.3 6-2 8.1.5l.9 1 .9-1c2.1-2.5 5.8-2.8 8.1-.5 2.5 2.5 2.4 6.6-.2 9.2z'));
+    c.restore();
+  }
+  function size() {
+    var d = window.devicePixelRatio || 1;
+    cv.width = innerWidth * d; cv.height = innerHeight * d;
+    ctx.setTransform(d, 0, 0, d, 0, 0);
+  }
+  function tick() {
+    ctx.clearRect(0, 0, innerWidth, innerHeight);
+    for (var i = 0; i < parts.length; i++) {
+      var p = parts[i];
+      p.y += p.vy; p.x += Math.sin((p.y + p.ph) / 40) * .6; p.r += p.vr;
+      if (p.y > innerHeight + 40) { p.y = -30; p.x = Math.random() * innerWidth; }
+      drawHeart(ctx, p.x, p.y, p.s, p.r, p.c);
+    }
+    raf = requestAnimationFrame(tick);
+  }
+  function startConfetti() {
+    size();
+    var cols = ['rgba(255,255,255,.9)', 'rgba(255,255,255,.55)', 'rgba(0,0,0,.18)'];
+    parts = [];
+    var n = reduce ? 18 : 46;
+    for (var i = 0; i < n; i++) {
+      parts.push({ x: Math.random() * innerWidth, y: Math.random() * innerHeight * (reduce ? 1 : -1), s: 14 + Math.random() * 30,
+        vy: 1.2 + Math.random() * 2.2, vr: (Math.random() - .5) * .04, r: Math.random() * 6, ph: Math.random() * 100, c: cols[i % cols.length] });
+    }
+    if (reduce) { ctx.clearRect(0, 0, innerWidth, innerHeight); parts.forEach(function (p) { drawHeart(ctx, p.x, p.y, p.s, p.r, p.c); }); }
+    else { cancelAnimationFrame(raf); tick(); }
+  }
+
+  yes.addEventListener('click', function () {
+    win.hidden = false;
+    no.hidden = true;
+    startConfetti();
+  });
+  $('again').addEventListener('click', function () {
+    cancelAnimationFrame(raf);
+    win.hidden = true;
+    no.hidden = false;
+    tries = 0;
+    hint.textContent = hints[0];
+    yes.style.setProperty('--grow', 1);
+  });
+})();
+</script>
+
+</body></html>
